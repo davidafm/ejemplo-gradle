@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        NEXUS_USER         = credentials('NEXUS_USER')
+        NEXUS_USER         = credentials('NEXUS-USER')
         NEXUS_PASSWORD     = credentials('NEXUS-PASS')
     }
     stages {

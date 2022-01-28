@@ -18,7 +18,11 @@ pipeline {
                         withSonarQubeEnv('sonarqube') {
                             sh "echo 'Calling sonar by ID!'"
                             // Run Maven on a Unix agent to execute Sonar.
+<<<<<<< HEAD
                            sh 'gradle sonarqube -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build'
+=======
+                            sh 'gradle sonarqube -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build'
+>>>>>>> feature-dir-inicial
                         }
                     }
                     stage("Paso 3: Curl Springboot Gradle sleep 20"){

@@ -11,7 +11,7 @@ pipeline {
         stage("Pipeline"){
             steps {
                 script{
-                    if(parameters.CompileTool=='maven'){
+                    if(params.CompileTool=='maven'){
                         //compilar con maven
                         def executor = load 'maven.groovy'
                         executor.call()

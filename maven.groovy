@@ -4,26 +4,32 @@
 	ejecucion.call()
 */
 def call(){
-  stage("Paso 1: Compilar"){
+  env.TAREA ="Paso 1: Compilar"
+  stage("$env.TAREA"){
     sh "mvn clean compile -e"
   }
-  stage("Paso 2: Testear"){
+  env.TAREA ="Paso 2: Testear"
+  stage("$env.TAREA"){
     sh "mvn clean test -e"
   }
-  stage("Paso 3: Build .Jar"){
+  env.TAREA ="Paso 3: Build .Jar"
+  stage("$env.TAREA"){
     sh "mvn clean package -e"
   }
-  stage("Paso 4: Sonar - Análisis Estático"){
+  env.TAREA ="Paso 4: Sonar - Análisis Estático"
+  stage("$env.TAREA"){
       sh "echo 'Análisis Estático!'"
       withSonarQubeEnv('sonarqube') {
           sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build'
       }
   }
-  stage("Paso 5: Curl Springboot Gradle sleep 100"){
+  env.TAREA ="Paso 5: Curl Springboot Gradle sleep 100"
+  stage("$env.TAREA"){
       sh "gradle bootRun&"
       sh "sleep 100 && curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
   }
-  stage("Paso 6: Subir Nexus"){
+  env.TAREA ="Paso 6: Subir Nexus"
+  stage("$env.TAREA"){
       nexusPublisher nexusInstanceId: 'nexus',
       nexusRepositoryId: 'devops-usach-nexus',
       packages: [
@@ -43,13 +49,16 @@ def call(){
           ]
       ]
   }
-  stage("Paso 7: Descargar Nexus"){
-      sh ' curl -X GET -u $NEXUS_USER:$NEXUS_PASSWORD "http://nexus3:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/0.0.1/DevOpsUsach2020-0.0.1.jar" -O'
+  env.TAREA ="Paso 7: Descargar Nexus"
+  stage("$env.TAREA"){
+      sh ' curl -X GET -u $NEXUS_USER:$NEXUS_PASSWORD "http://nexus:8081/repository/devops-usach-nexus/com/devopsusach2020/DevOpsUsach2020/0.0.1/DevOpsUsach2020-0.0.1.jar" -O'
   }
-  stage("Paso 8: Levantar Artefacto Jar"){
+  env.TAREA ="Paso 8: Levantar Artefacto Jar"
+  stage("$env.TAREA"){
       sh 'nohup bash java -jar DevOpsUsach2020-0.0.1.jar & >/dev/null'
   }
-  stage("Paso 9: Testear Artefacto - Dormir(Esperar 20sg) "){
+  env.TAREA ="Paso 9: Testear Artefacto - Dormir(Esperar 20sg) "
+  stage("$env.TAREA"){
       sh "sleep 20 && curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
   }
 }
